@@ -4,6 +4,7 @@ namespace App;
 
 use App\Facades\Kronox;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 
 class KronoxCredentials extends Model
 {
@@ -35,7 +36,15 @@ class KronoxCredentials extends Model
             return $this->JSESSIONID;
         }
 
-        $session = Kronox::login($this->username, $this->password);
+        return $this->login();
+    }
+
+    public function login()
+    {
+        $username = $this->username;
+        $password = Crypt::decrypt($this->password);
+        $session = Kronox::login($username, $password);
+
         $this->update([
             'JSESSIONID' => $session
         ]);

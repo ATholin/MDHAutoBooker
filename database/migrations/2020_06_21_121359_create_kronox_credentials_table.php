@@ -18,7 +18,7 @@ class CreateKronoxCredentialsTable extends Migration
 
             $table->string('JSESSIONID')->nullable();
             $table->string('username');
-            $table->string('password');
+            $table->text('password');
             $table->foreignId('user_id')->references('id')->on('users');
 
             $table->timestamps();

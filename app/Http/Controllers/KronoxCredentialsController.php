@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\View\View;
 
 class KronoxCredentialsController extends Controller
@@ -39,6 +40,8 @@ class KronoxCredentialsController extends Controller
             'username' => 'required|unique:kronox_credentials|min:3',
             'password' => 'required|:min:3',
         ]);
+
+        $validated['password'] = Crypt::encrypt($validated['password']);
 
         /** @var KronoxCredentials $credential */
         $credential = $request->user()->credentials()->create($validated);
