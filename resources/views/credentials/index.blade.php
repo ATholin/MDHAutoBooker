@@ -74,7 +74,7 @@
                                 {{ $credential->session }}
                             </td>
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">
-                                {{ $credential->bookings_count }}
+                                {{ $credential->scheduled_bookings_count }}
                             </td>
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">
                                 {{ $credential->updated_at->diffForHumans() }}

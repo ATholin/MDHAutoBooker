@@ -52,7 +52,7 @@ class KronoxCredentials extends Model
         return $session;
     }
 
-    public function getBookingsCountAttribute()
+    public function getScheduledBookingsCountAttribute()
     {
         return $this->bookings()->count();
     }
