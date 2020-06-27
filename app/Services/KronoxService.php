@@ -157,7 +157,7 @@ class KronoxService
                 'id' => $booking->room,
                 'typ' => 'RESURSER_LOKALER',
                 'intervall' => $booking->interval,
-                'moment' => $booking->message ?? '%20',
+                'moment' => $booking->message ?? ' ',
                 'flik' => 'FLIK_0001'
             ],
             'cookies' => $cookieJar
