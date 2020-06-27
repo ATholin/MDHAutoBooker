@@ -252,7 +252,7 @@ class KronoxService
         return $innerHTML;
     }
 
-    protected function timeToInterval(string $time)
+    public function timeToInterval(string $time)
     {
         return collect($this->intervals)->firstWhere('time', $time)['interval'];
     }

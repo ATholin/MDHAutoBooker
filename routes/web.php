@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/bookings', [UserBookingController::class, 'index'])->name('user_bookings.index');
     Route::post('/bookings', [UserBookingController::class, 'book'])->name('user_bookings.book');
     Route::delete('/bookings', [UserBookingController::class, 'unBook'])->name('user_bookings.unBook');
+    Route::post('/bookings/recurring', [UserBookingController::class, 'makeRecurring'])->name('user_bookings.makeRecurring');
 
     Route::get('/scheduled', [ScheduledBookingController::class, 'index'])->name('scheduled_booking.index');
     Route::post('/scheduled', [ScheduledBookingController::class, 'book'])->name('scheduled_booking.book');

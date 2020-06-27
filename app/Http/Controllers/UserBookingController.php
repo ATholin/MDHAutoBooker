@@ -73,13 +73,52 @@ class UserBookingController extends Controller
      */
     public function unBook(Request $request)
     {
+
         $validated = $request->validate([
             'booker' => 'required|exists:App\KronoxCredentials,username',
             'bookingID' => 'required|string'
         ]);
 
+        $username = $validated['booker'];
+
+        if (! auth()->user()->credentials()->whereUsername($username)->exists()) {
+            return back();
+        }
+
         Kronox::unBook($validated['booker'], $validated['bookingID']);
 
         return back();
+    }
+
+    /**
+     * Make a booking recurring
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function makeRecurring(Request $request)
+    {
+        $data = json_decode($request->input('booking'));
+
+        $newDate = Carbon::parse($data->date)->addWeek();
+
+
+        $existing = ScheduledBooking::whereDate('date', $newDate)
+            ->whereInterval(Kronox::timeToInterval($data->time))
+            ->whereRoom($data->room);
+
+        if ($existing->exists()) {
+            return back();
+        }
+
+        $request->user()->credentials()->firstWhere('username', $data->booker)->bookings()->create([
+            'date' => $newDate,
+            'interval' => Kronox::timeToInterval($data->time),
+            'room' => $data->room,
+            'message' => $data->message,
+            'recurring' => true,
+        ]);
+
+        return redirect()->route('scheduled_booking.index');
     }
 }

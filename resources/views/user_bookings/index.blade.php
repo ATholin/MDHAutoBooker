@@ -50,6 +50,15 @@
                             </td>
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
 
+                                <form method="POST" action="{{ route('user_bookings.makeRecurring') }}">
+                                    @csrf
+
+                                    <input type="hidden" value="{{ json_encode($booking) }}" name="booking" >
+
+                                    <button type="submit" class="text-indigo-600 hover:text-indigo-900">Make recurring
+                                    </button>
+                                </form>
+
                                 <form method="POST" action="{{ route('user_bookings.unBook') }}">
                                     @csrf
                                     @method('DELETE')
