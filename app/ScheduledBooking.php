@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Events\BookingSuccessful;
 use App\Facades\Kronox;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
@@ -19,6 +20,8 @@ class ScheduledBooking extends Model
     public function book()
     {
         $result = Kronox::book($this);
+
+        BookingSuccessful::dispatchIf($result === 'OK', $this);
 
         $this->update([
             'result' => $result
