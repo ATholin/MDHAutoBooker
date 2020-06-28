@@ -152,6 +152,18 @@
                             Add some <a href="{{ route('credentials.index') }}"
                                         class="text-indigo-500 hover:text-indigo-600">credentials</a> to see bookings.
                         </td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">
+                       </td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">
+                       </td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">
+                       </td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">
+                        </td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">
+                        </td>
                     @endforelse
                     {{--                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">--}}
                     {{--                            <div class="flex items-center">--}}
