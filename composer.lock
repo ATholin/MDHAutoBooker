@@ -743,16 +743,16 @@
         },
         {
             "name": "laravel-frontend-presets/tall",
-            "version": "v1.7.2",
+            "version": "v1.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-frontend-presets/tall.git",
-                "reference": "5553d07eefbeac263db8cd4b58d446bc7751f42c"
+                "reference": "47d8c00aad78ab69b756e3fd8fcf3fcfe15a8d49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-frontend-presets/tall/zipball/5553d07eefbeac263db8cd4b58d446bc7751f42c",
-                "reference": "5553d07eefbeac263db8cd4b58d446bc7751f42c",
+                "url": "https://api.github.com/repos/laravel-frontend-presets/tall/zipball/47d8c00aad78ab69b756e3fd8fcf3fcfe15a8d49",
+                "reference": "47d8c00aad78ab69b756e3fd8fcf3fcfe15a8d49",
                 "shasum": ""
             },
             "require": {
@@ -805,7 +805,7 @@
                 "tailwindui",
                 "tall"
             ],
-            "time": "2020-05-08T13:34:54+00:00"
+            "time": "2020-07-21T10:45:52+00:00"
         },
         {
             "name": "laravel/framework",
@@ -1030,16 +1030,16 @@
         },
         {
             "name": "laravel/ui",
-            "version": "v2.0.3",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/ui.git",
-                "reference": "15368c5328efb7ce94f35ca750acde9b496ab1b1"
+                "reference": "da9350533d0da60d5dc42fb7de9c561c72129bba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/ui/zipball/15368c5328efb7ce94f35ca750acde9b496ab1b1",
-                "reference": "15368c5328efb7ce94f35ca750acde9b496ab1b1",
+                "url": "https://api.github.com/repos/laravel/ui/zipball/da9350533d0da60d5dc42fb7de9c561c72129bba",
+                "reference": "da9350533d0da60d5dc42fb7de9c561c72129bba",
                 "shasum": ""
             },
             "require": {
@@ -1081,7 +1081,7 @@
                 "laravel",
                 "ui"
             ],
-            "time": "2020-04-29T15:06:45+00:00"
+            "time": "2020-06-30T20:56:33+00:00"
         },
         {
             "name": "league/commonmark",
