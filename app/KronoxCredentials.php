@@ -8,20 +8,19 @@ use Illuminate\Support\Facades\Crypt;
 
 class KronoxCredentials extends Model
 {
-
     protected $fillable = [
         'JSESSIONID',
         'username',
-        'password'
+        'password',
     ];
 
     protected $hidden = [
-        'password'
+        'password',
     ];
 
     public function getSessionAttribute()
     {
-        if (!$this->JSESSIONID || $this->updated_at->lt(now()->subMinutes(15))) {
+        if (! $this->JSESSIONID || $this->updated_at->lt(now()->subMinutes(15))) {
             return $this->poll();
         }
 
@@ -30,9 +29,7 @@ class KronoxCredentials extends Model
 
     public function poll()
     {
-
         if ($this->JSESSIONID && Kronox::poll($this->JSESSIONID)) {
-
             return $this->JSESSIONID;
         }
 
@@ -46,7 +43,7 @@ class KronoxCredentials extends Model
         $session = Kronox::login($username, $password);
 
         $this->update([
-            'JSESSIONID' => $session
+            'JSESSIONID' => $session,
         ]);
 
         return $session;

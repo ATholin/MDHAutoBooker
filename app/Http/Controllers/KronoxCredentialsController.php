@@ -24,7 +24,7 @@ class KronoxCredentialsController extends Controller
         $credentials = $request->user()->credentials;
 
         return view('credentials.index', [
-            'credentials' => $credentials
+            'credentials' => $credentials,
         ]);
     }
 
@@ -95,6 +95,7 @@ class KronoxCredentialsController extends Controller
     public function destroy(KronoxCredentials $credential)
     {
         $credential->delete();
+
         return back();
     }
 }
