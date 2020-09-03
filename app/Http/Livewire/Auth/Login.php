@@ -23,7 +23,7 @@ class Login extends Component
             'password' => ['required'],
         ]);
 
-        if (!Auth::attempt($credentials, $this->remember)) {
+        if (! Auth::attempt($credentials, $this->remember)) {
             $this->addError('email', trans('auth.failed'));
 
             return;

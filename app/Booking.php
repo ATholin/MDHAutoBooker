@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App;
 
 class Booking

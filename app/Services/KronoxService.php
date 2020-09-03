@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 use App\Booking;
 use App\KronoxCredentials;
 use App\ScheduledBooking;
@@ -26,23 +25,23 @@ class KronoxService
         ],
         [
             'interval' => 1,
-            'time' => '10:15 - 12:00'
+            'time' => '10:15 - 12:00',
         ],
         [
             'interval' => 2,
-            'time' => '12:15 - 14:00'
+            'time' => '12:15 - 14:00',
         ],
         [
             'interval' => 3,
-            'time' => '14:15 - 16:00'
+            'time' => '14:15 - 16:00',
         ],
         [
             'interval' => 4,
-            'time' => '16:15 - 18:00'
+            'time' => '16:15 - 18:00',
         ],
         [
             'interval' => 5,
-            'time' => '18:15 - 20:00'
+            'time' => '18:15 - 20:00',
         ],
     ];
     /**
@@ -109,7 +108,7 @@ class KronoxService
         $session = $this->getInitialSession();
 
         $cookieJar = CookieJar::fromArray([
-            'JSESSIONID' => $session
+            'JSESSIONID' => $session,
         ], $this->getCookieDomain());
 
         $response = $this->client->post('login_do.jsp', [
@@ -118,7 +117,7 @@ class KronoxService
                 'username' => $username,
                 'password' => $password,
             ],
-            'cookies' => $cookieJar
+            'cookies' => $cookieJar,
         ]);
 
         return $session;
@@ -127,6 +126,7 @@ class KronoxService
     protected function getInitialSession(): string
     {
         $response = $this->client->get('/');
+
         return CookieParser::fromString($response->getHeader('Set-Cookie')[0])->getValue();
     }
 
@@ -138,7 +138,7 @@ class KronoxService
     public function poll(string $JSESSIONID): bool
     {
         $cookieJar = CookieJar::fromArray([
-            'JSESSIONID' => $JSESSIONID
+            'JSESSIONID' => $JSESSIONID,
         ], $this->getCookieDomain());
 
         return $this->client->get('/', ['cookies' => $cookieJar])->getBody()->getContents() === 'OK';
@@ -147,7 +147,7 @@ class KronoxService
     public function book(ScheduledBooking $booking)
     {
         $cookieJar = CookieJar::fromArray([
-            'JSESSIONID' => $booking->credentials->session
+            'JSESSIONID' => $booking->credentials->session,
         ], $this->getCookieDomain());
 
         return $this->client->get('/ajax/ajax_resursbokning.jsp', [
@@ -158,9 +158,9 @@ class KronoxService
                 'typ' => 'RESURSER_LOKALER',
                 'intervall' => $booking->interval,
                 'moment' => $booking->message ?? ' ',
-                'flik' => 'FLIK_0001'
+                'flik' => 'FLIK_0001',
             ],
-            'cookies' => $cookieJar
+            'cookies' => $cookieJar,
         ])->getBody()->getContents();
     }
 
@@ -168,34 +168,34 @@ class KronoxService
     {
         $credentials = KronoxCredentials::whereUsername($booker)->first();
 
-        if (!$credentials) {
+        if (! $credentials) {
             return false;
         }
 
         $cookieJar = CookieJar::fromArray([
-            'JSESSIONID' => $credentials->session
+            'JSESSIONID' => $credentials->session,
         ], $this->getCookieDomain());
 
         return $this->client->get('/ajax/ajax_resursbokning.jsp', [
             'query' => [
                 'op' => 'avboka',
-                'bokningsId' => $id
+                'bokningsId' => $id,
             ],
-            'cookies' => $cookieJar
+            'cookies' => $cookieJar,
         ])->getBody()->getContents();
     }
 
     public function bookings(string $JSESSIONID)
     {
         $url = '/minaresursbokningar.jsp?flik=FLIK_0001';
-        $url = $url . '&datum=' . substr(now(), 2, 8);
+        $url = $url.'&datum='.substr(now(), 2, 8);
 
         $cookieJar = CookieJar::fromArray([
-            'JSESSIONID' => $JSESSIONID
+            'JSESSIONID' => $JSESSIONID,
         ], $this->getCookieDomain());
 
         $html = $this->client->get($url, [
-            'cookies' => $cookieJar
+            'cookies' => $cookieJar,
         ]);
 
         if (empty($html)) {
@@ -259,18 +259,18 @@ class KronoxService
 
     public function all(string $JSESSIONID, Carbon $date = null)
     {
-        if (!$date) {
+        if (! $date) {
             $date = now();
         }
 
         $url = "/ajax/ajax_resursbokning.jsp?op=hamtaBokningar&flik=FLIK_0001&datum={$date->format('y-m-d')}";
 
         $cookieJar = CookieJar::fromArray([
-            'JSESSIONID' => $JSESSIONID
+            'JSESSIONID' => $JSESSIONID,
         ], $this->getCookieDomain());
 
         $html = $this->client->get($url, [
-            'cookies' => $cookieJar
+            'cookies' => $cookieJar,
         ])->getBody()->getContents();
 
         $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
@@ -333,8 +333,7 @@ class KronoxService
         $tStart = $start->format('H:i');
         $tEnd = $end->format('H:i');
         $time = "{$tStart} - {$tEnd}";
+
         return collect($this->intervals)->firstWhere('time', $time)['interval'];
     }
-
-
 }

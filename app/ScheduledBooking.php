@@ -14,7 +14,7 @@ class ScheduledBooking extends Model
     protected $dates = ['created_at', 'updated_at', 'date'];
 
     protected $casts = [
-        'recurring' => 'boolean'
+        'recurring' => 'boolean',
     ];
 
     public function book()
@@ -24,7 +24,7 @@ class ScheduledBooking extends Model
         BookingSuccessful::dispatchIf($result === 'OK', $this);
 
         $this->update([
-            'result' => $result
+            'result' => $result,
         ]);
     }
 
@@ -44,7 +44,6 @@ class ScheduledBooking extends Model
 
     public function poll()
     {
-
         $result = Kronox::poll($this->JSESSIONID);
         if ($result != 'OK') {
             $username = $this->username;

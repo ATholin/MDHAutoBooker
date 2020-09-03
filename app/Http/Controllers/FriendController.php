@@ -22,7 +22,7 @@ class FriendController extends Controller
         $friends = $request->user()->friends;
 
         return view('friends.index', [
-            'friends' => $friends
+            'friends' => $friends,
         ]);
     }
 
@@ -88,6 +88,7 @@ class FriendController extends Controller
     public function destroy(Friend $friend)
     {
         $friend->delete();
+
         return back();
     }
 }

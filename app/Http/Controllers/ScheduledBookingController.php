@@ -23,7 +23,7 @@ class ScheduledBookingController extends Controller
     public function index(Request $request)
     {
         return view('scheduled.index', [
-            'bookings' => $request->user()->bookings
+            'bookings' => $request->user()->bookings,
         ]);
     }
 
@@ -41,7 +41,7 @@ class ScheduledBookingController extends Controller
             'room' => 'required|string|max:10',
             'message' => 'nullable|string|max:255',
             'recurring' => 'sometimes',
-            'kronox_credentials_id' => 'exists:App\KronoxCredentials,id'
+            'kronox_credentials_id' => 'exists:App\KronoxCredentials,id',
         ]);
 
         /** @var ScheduledBooking $booking */
@@ -114,6 +114,7 @@ class ScheduledBookingController extends Controller
     public function destroy(ScheduledBooking $scheduled)
     {
         $scheduled->delete();
+
         return back();
     }
 }

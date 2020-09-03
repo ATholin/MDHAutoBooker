@@ -42,7 +42,7 @@ class Reset extends Component
             [
                 'token' => $this->token,
                 'email' => $this->email,
-                'password' => $this->password
+                'password' => $this->password,
             ],
             function ($user, $password) {
                 $user->password = Hash::make($password);

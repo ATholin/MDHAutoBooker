@@ -26,12 +26,12 @@ class UserBookingController extends Controller
         })->flatten(1);
 
         return view('user_bookings.index', [
-            'bookings' => $bookings
+            'bookings' => $bookings,
         ]);
     }
 
     /**
-     * Unbook from Kronox
+     * Unbook from Kronox.
      *
      * @param int $id
      * @return RedirectResponse
@@ -44,7 +44,7 @@ class UserBookingController extends Controller
             'room' => 'required|string|max:10',
             'message' => 'nullable|string|max:255',
             'recurring' => 'sometimes|boolean',
-            'kronox_credentials_id' => 'exists:App\KronoxCredentials,id'
+            'kronox_credentials_id' => 'exists:App\KronoxCredentials,id',
         ]);
 
         /** @var ScheduledBooking $booking */
@@ -66,17 +66,16 @@ class UserBookingController extends Controller
     }
 
     /**
-     * Unbook from Kronox
+     * Unbook from Kronox.
      *
      * @param int $id
      * @return RedirectResponse
      */
     public function unBook(Request $request)
     {
-
         $validated = $request->validate([
             'booker' => 'required|exists:App\KronoxCredentials,username',
-            'bookingID' => 'required|string'
+            'bookingID' => 'required|string',
         ]);
 
         $username = $validated['booker'];
@@ -91,7 +90,7 @@ class UserBookingController extends Controller
     }
 
     /**
-     * Make a booking recurring
+     * Make a booking recurring.
      *
      * @param Request $request
      * @return RedirectResponse
@@ -101,7 +100,6 @@ class UserBookingController extends Controller
         $data = json_decode($request->input('booking'));
 
         $newDate = Carbon::parse($data->date)->addWeek();
-
 
         $existing = ScheduledBooking::whereDate('date', $newDate)
             ->whereInterval(Kronox::timeToInterval($data->time))

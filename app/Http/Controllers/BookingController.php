@@ -15,25 +15,24 @@ class BookingController extends Controller
 
         $date = Carbon::parse($request->input('date'));
 
-        if (!$date || $date->lt(now()->subDay())) {
+        if (! $date || $date->lt(now()->subDay())) {
             return redirect()->route('home', [
-                'date' => now()->format('Y-m-d')
+                'date' => now()->format('Y-m-d'),
             ]);
         }
 
-        if (!$credential) {
+        if (! $credential) {
             return view('bookings.index', [
                 'rows' => [],
-                'date' => $date->format('Y-m-d')
+                'date' => $date->format('Y-m-d'),
             ]);
         }
-
 
         $rows = Kronox::all($credential->session, $date);
 
         return view('bookings.index', [
             'rows' => $rows,
-            'date' => $date->format('Y-m-d')
+            'date' => $date->format('Y-m-d'),
         ]);
     }
 
@@ -45,7 +44,7 @@ class BookingController extends Controller
             'room' => 'required|string|max:10',
             'message' => 'nullable|string|max:255',
             'recurring' => 'sometimes|boolean',
-            'kronox_credentials_id' => 'exists:App\KronoxCredentials,id'
+            'kronox_credentials_id' => 'exists:App\KronoxCredentials,id',
         ]);
 
         /** @var ScheduledBooking $booking */

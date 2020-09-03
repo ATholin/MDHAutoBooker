@@ -9,7 +9,7 @@ class Friend extends Model
     protected $fillable = [
         'name',
         'mdh_username',
-        'color'
+        'color',
     ];
 
     public function user()
