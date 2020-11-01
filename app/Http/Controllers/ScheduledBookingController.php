@@ -42,11 +42,13 @@ class ScheduledBookingController extends Controller
             'message' => 'nullable|string|max:255',
             'recurring' => 'sometimes',
             'kronox_credentials_id' => 'exists:App\KronoxCredentials,id',
+            'flik' => 'sometimes|in:FLIK_0001,FLIK_0010',
         ]);
 
         /** @var ScheduledBooking $booking */
         $booking = ScheduledBooking::make($validated);
         $date = Carbon::parse($request->date);
+        $flik = $request->input('flik');
         $booking->date = $date;
 
         // Schedule booking if more than a week out
