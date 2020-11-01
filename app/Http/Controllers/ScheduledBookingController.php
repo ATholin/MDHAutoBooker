@@ -61,7 +61,7 @@ class ScheduledBookingController extends Controller
 
         Kronox::book($booking);
 
-        return back();
+        return redirect(route('user_bookings.index'));
     }
 
     public function addNextWeek(ScheduledBooking $scheduled)
