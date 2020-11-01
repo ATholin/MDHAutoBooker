@@ -11,10 +11,10 @@
 @endif
 
 <!-- Fonts -->
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" data-turbolinks-track="true">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}" data-turbolinks-track="true">
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     @livewireStyles
 
     <!-- CSRF Token -->

@@ -13,6 +13,7 @@ class BookingController extends Controller
     {
         $credential = $request->user()->credentials()->first();
 
+        $flik = $request->input('flik');
         $date = Carbon::parse($request->input('date'));
 
         if (! $date || $date->lt(now()->subDay())) {
@@ -28,7 +29,7 @@ class BookingController extends Controller
             ]);
         }
 
-        $rows = Kronox::all($credential->session, $date);
+        $rows = Kronox::all($credential->session, $date, $flik);
 
         return view('bookings.index', [
             'rows' => $rows,
@@ -45,6 +46,7 @@ class BookingController extends Controller
             'message' => 'nullable|string|max:255',
             'recurring' => 'sometimes|boolean',
             'kronox_credentials_id' => 'exists:App\KronoxCredentials,id',
+            'flik' => 'sometimes|in:FLIK_0001,FLIK_0010',
         ]);
 
         /** @var ScheduledBooking $booking */
@@ -60,7 +62,7 @@ class BookingController extends Controller
             return back();
         }
 
-        Kronox::book($booking);
+        $booking->book();
 
         return back();
     }

@@ -1,86 +1,105 @@
+@inject('kronox', 'App\Services\KronoxService')
 @extends('layouts.app')
 
 @section('content')
     <div class="flex justify-between">
         @include('partials.h1', ['text' => 'Scheduled Bookings'])
-        <x-modal x-cloak>
-            <button
-                class="px-4 py-2 text-sm font-medium text-indigo-800 bg-indigo-300 border border-transparent rounded-md hover:bg-indigo-200 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-400 transition duration-150 ease-in-out"
-                @click="showModal = true">
-                Create scheduled
-            </button>
 
-            <x-slot name="title">Book</x-slot>
-
-            <x-slot name="content">
-                <form id="scheduled" action="{{ route('scheduled_booking.book') }}" method="POST">
-                    @csrf
-
-                    <label class="block mt-4">
-                        <span class="text-gray-700">Account</span>
-                        <select name="kronox_credentials_id" id="credentials" class="form-select mt-1 block w-full"
-                                required>
-                            @foreach(auth()->user()->credentials as $credential)
-                                <option value="{{ $credential->id }}">
-                                    {{ $credential->username }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </label>
-
-                    <label class="block mt-4">
-                        <span class="text-gray-700">Date</span>
-                        <input type="date" class="form-input mt-1 block w-full" id="date" name="date" required
-                               value="{{ now()->format('Y-m-d') }}">
-                    </label>
-
-                    <label class="block mt-4">
-                        <span class="text-gray-700">Time</span>
-                        <select class="form-select mt-1 block w-full" id="interval" name="interval" required>
-                            @foreach(\App\Facades\Kronox::getIntervals() as $interval)
-                                <option value="{{ $interval['interval'] }}">
-                                    {{ $interval['time'] }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </label>
-
-                    <label class="block mt-4">
-                        <span class="text-gray-700">Room</span>
-                        <select class="form-select mt-1 block w-full" id="room" name="room" required>
-                            @foreach(\App\Facades\Kronox::getRooms() as $room)
-                                <option>{{ $room }}</option>
-                            @endforeach
-                        </select>
-                    </label>
-
-                    <label class="block mt-4">
-                        <span class="text-gray-700">Message</span>
-                        <input type="text" class="form-input mt-1 block w-full" id="message" name="message"/>
-                    </label>
-
-                    <label class="block mt-4">
-                        <span class="text-gray-700">Recurring</span>
-                        <input type="hidden" class="form-checkbox mt-1 block" id="recurring" name="recurring"
-                               value="0"/>
-                        <input type="checkbox" class="form-checkbox mt-1 block" id="recurring" name="recurring"
-                               value="1"/>
-                    </label>
-
-                </form>
-            </x-slot>
-
-            <x-slot name="footer">
-                <button type="submit" form="scheduled"
-                        class="px-4 py-2 text-sm font-medium text-green-800 bg-green-300 border border-transparent rounded-md hover:bg-green-200 focus:outline-none focus:border-green-700 focus:shadow-outline-indigo active:bg-green-400 transition duration-150 ease-in-out"
-                        type="submit">Submit
-                </button>
+        <div class="flex items-center space-x-2">
+            <form id="form" >
+                <select class="mt-1 form-select px-4 py-2 rounded shadow" id="flik" name="flik" onchange="document.getElementById('form').submit()">
+                    <option value="FLIK_0001" {{ request('flik') == 'FLIK_0001' ? "selected" : ""  }}>Västerås</option>
+                    <option value="FLIK_0010" {{ request('flik') == 'FLIK_0010' ? "selected" : ""  }}>Eskilstuna</option>
+                </select>
+            </form>
+            <x-modal x-cloak>
                 <button
-                    class="ml-1 px-4 py-2 text-sm font-medium text-gray-600 border border-transparent rounded-md hover:bg-gray-200 focus:outline-none focus:shadow-outline-indigo active:bg-gray-400 transition duration-150 ease-in-out"
-                    @click="showModal = false">Close
+                    class="px-4 py-2 text-sm font-medium text-indigo-800 bg-indigo-300 border border-transparent rounded-md hover:bg-indigo-200 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-400 transition duration-150 ease-in-out"
+                    @click="showModal = true">
+                    Create scheduled
                 </button>
-            </x-slot>
-        </x-modal>
+    
+                <x-slot name="title">Book</x-slot>
+    
+                <x-slot name="content">
+                    <form id="scheduled" action="{{ route('scheduled_booking.book') }}" method="POST">
+                        @csrf
+    
+                        <label class="block mt-4">
+                            <span class="text-gray-700">Account</span>
+                            <select name="kronox_credentials_id" id="credentials" class="form-select mt-1 block w-full"
+                                    required>
+                                @foreach(auth()->user()->credentials as $credential)
+                                    <option value="{{ $credential->id }}">
+                                        {{ $credential->username }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </label>
+    
+                        <label class="block mt-4">
+                            <span class="text-gray-700">Date</span>
+                            <input type="date" class="form-input mt-1 block w-full" id="date" name="date" required
+                                value="{{ now()->format('Y-m-d') }}">
+                        </label>
+    
+                        <label class="block mt-4">
+                            <span class="text-gray-700">Time</span>
+                            <select class="form-select mt-1 block w-full" id="interval" name="interval" required>
+                                @foreach($kronox->getIntervals() as $interval)
+                                    <option value="{{ $interval['interval'] }}">
+                                        {{ $interval['time'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </label>
+    
+                        <label class="block mt-4">
+                            <span class="text-gray-700">Campus</span>
+                            <select class="form-select bg-gray-200 mt-1 block w-full" id="flik" name="flik" disabled>
+                                <option value="FLIK_0001" {{ request('flik') == 'FLIK_0001' ? "selected" : ""  }}>Västerås</option>
+                                <option value="FLIK_0010" {{ request('flik') == 'FLIK_0010' ? "selected" : ""  }}>Eskilstuna</option>
+                            </select>
+                        </label>
+    
+                        <label class="block mt-4">
+                            <span class="text-gray-700">Room</span>
+                            <select class="form-select mt-1 block w-full" id="room" name="room" required>
+                                @foreach($kronox->getRooms(request('flik') ?? 'FLIK_0001') as $room)
+                                    <option>{{ $room }}</option>
+                                @endforeach
+                            </select>
+                        </label>
+    
+                        <label class="block mt-4">
+                            <span class="text-gray-700">Message</span>
+                            <input type="text" class="form-input mt-1 block w-full" id="message" name="message"/>
+                        </label>
+    
+                        <label class="block mt-4">
+                            <span class="text-gray-700">Recurring</span>
+                            <input type="hidden" class="form-checkbox mt-1 block" id="recurring" name="recurring"
+                                value="0"/>
+                            <input type="checkbox" class="form-checkbox mt-1 block" id="recurring" name="recurring"
+                                value="1"/>
+                        </label>
+    
+                    </form>
+                </x-slot>
+    
+                <x-slot name="footer">
+                    <button type="submit" form="scheduled"
+                            class="px-4 py-2 text-sm font-medium text-green-800 bg-green-300 border border-transparent rounded-md hover:bg-green-200 focus:outline-none focus:border-green-700 focus:shadow-outline-indigo active:bg-green-400 transition duration-150 ease-in-out"
+                            type="submit">Submit
+                    </button>
+                    <button
+                        class="ml-1 px-4 py-2 text-sm font-medium text-gray-600 border border-transparent rounded-md hover:bg-gray-200 focus:outline-none focus:shadow-outline-indigo active:bg-gray-400 transition duration-150 ease-in-out"
+                        @click="showModal = false">Close
+                    </button>
+                </x-slot>
+            </x-modal>
+        </div>
+
     </div>
 
     <div class="flex flex-col">

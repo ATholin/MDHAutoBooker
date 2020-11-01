@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Crypt;
 
 class ScheduledBooking extends Model
 {
-    protected $fillable = ['date', 'interval', 'mdh_username', 'room', 'message', 'recurring', 'result', 'kronox_credentials_id'];
+    protected $fillable = ['date', 'interval', 'mdh_username', 'room', 'message', 'recurring', 'result', 'kronox_credentials_id', 'flik'];
 
     protected $dates = ['created_at', 'updated_at', 'date'];
 

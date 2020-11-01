@@ -22,7 +22,10 @@ class UserBookingController extends Controller
     public function index()
     {
         $bookings = auth()->user()->credentials->map(function (KronoxCredentials $credential) {
-            return Kronox::bookings($credential->session);
+            return array_merge(
+                Kronox::bookings($credential->session, 'FLIK_0001'),
+                Kronox::bookings($credential->session, 'FLIK_0010')
+            );
         })->flatten(1);
 
         return view('user_bookings.index', [
@@ -33,7 +36,7 @@ class UserBookingController extends Controller
     /**
      * Unbook from Kronox.
      *
-     * @param int $id
+     * @param Request $request
      * @return RedirectResponse
      */
     public function book(Request $request)
@@ -45,6 +48,7 @@ class UserBookingController extends Controller
             'message' => 'nullable|string|max:255',
             'recurring' => 'sometimes|boolean',
             'kronox_credentials_id' => 'exists:App\KronoxCredentials,id',
+            'flik' => 'sometimes|in:FLIK_0001,FLIK_0010',
         ]);
 
         /** @var ScheduledBooking $booking */

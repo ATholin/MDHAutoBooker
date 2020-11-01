@@ -1,14 +1,20 @@
+@inject('kronox', 'App\Services\KronoxService')
 @extends('layouts.app')
 
 @section('content')
     @include('partials.h1', ['text' => 'Bookings'])
 
-
     <label class="block my-4">
         <span class="text-gray-700 block">Date</span>
-        <input type="date" class="mt-1 form-control px-4 py-2 rounded shadow"
-               onblur="window.location.replace('{{ route('home') }}?date=' + this.value)"
-               id="date" name="date" value="{{$date}}" min="{{ now()->format('Y-m-d') }}">
+        <form id="form" action="{{ route('home') }}">
+            <input type="date" class="mt-1 form-control px-4 py-2 rounded shadow"
+                   onblur="document.getElementById('form').submit()"
+                   id="date" name="date" value="{{$date}}" min="{{ now()->format('Y-m-d') }}">
+            <select class="mt-1 form-select px-4 py-2 rounded shadow" id="flik" name="flik" onchange="document.getElementById('form').submit()">
+                <option value="FLIK_0001" {{ request('flik') == 'FLIK_0001' ? "selected" : ""  }}>Västerås</option>
+                <option value="FLIK_0010" {{ request('flik') == 'FLIK_0010' ? "selected" : ""  }}>Eskilstuna</option>
+            </select>
+        </form>
     </label>
 
     <div class="flex flex-col">
@@ -62,6 +68,7 @@
                                                 <form id="{{ $ri.$i }}" action="{{ route('bookings.book') }}"
                                                       method="POST">
                                                     @csrf
+                                                    <input type="hidden" value="{{ request('flik') ?? 'FLIK_0001' }}" name="flik" >
 
                                                     <label class="block mt-4">
                                                         <span class="text-gray-700">Account</span>
@@ -98,7 +105,7 @@
                                                         <span class="text-gray-700">Room</span>
                                                         <select class="form-select mt-1 block w-full" id="room"
                                                                 name="room" required>
-                                                            @foreach(\App\Facades\Kronox::getRooms() as $room)
+                                                            @foreach($kronox->getRooms(request('flik') ?? 'FLIK_0001') as $room)
                                                                 <option{{ $room == $row[0]['text'] ? ' selected' : '' }}>{{ $room }}</option>
                                                             @endforeach
                                                         </select>

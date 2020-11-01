@@ -45,44 +45,66 @@ class KronoxService
         ],
     ];
     /**
-     * @var string[]
+     * @var array[]
      */
     protected array $rooms = [
-        'R1-013',
-        'R1-014',
-        'R1-016',
-        'R1-017',
-        'R1-018',
-        'R1-028',
-        'R1-029',
-        'R1-030',
-        'R2-001',
-        'R2-003',
-        'R2-012',
-        'R2-013',
-        'R2-014',
-        'R2-031',
-        'R2-032',
-        'R2-042',
-        'R2-089',
-        'R2-090',
-        'R2-091',
-        'R2-092',
-        'U2-009',
-        'U2-010',
-        'U2-011',
-        'U2-012',
-        'U2-043',
-        'U2-044',
-        'U2-260',
-        'U2-261',
-        'U2-263',
-        'U2-264',
-        'U2-265',
-        'U2-267',
-        'U2-269',
-        'U2-271',
-        'U2-273',
+        'FLIK_0001' => [
+            'R1-013',
+            'R1-014',
+            'R1-016',
+            'R1-017',
+            'R1-018',
+            'R1-028',
+            'R1-029',
+            'R1-030',
+            'R2-001',
+            'R2-003',
+            'R2-012',
+            'R2-013',
+            'R2-014',
+            'R2-031',
+            'R2-032',
+            'R2-042',
+            'R2-089',
+            'R2-090',
+            'R2-091',
+            'R2-092',
+            'U2-009',
+            'U2-010',
+            'U2-011',
+            'U2-012',
+            'U2-043',
+            'U2-044',
+            'U2-260',
+            'U2-261',
+            'U2-263',
+            'U2-264',
+            'U2-265',
+            'U2-267',
+            'U2-269',
+            'U2-271',
+            'U2-273',
+        ],
+        'FLIK_0010' => [
+            'A1-052',
+            'A1-053',
+            'A1-054',
+            'A1-055',
+            'A1-056',
+            'A1-057',
+            'A2-009',
+            'A2-010',
+            'A2-011',
+            'A2-012',
+            'A2-013',
+            'A2-033',
+            'A3-028',
+            'B1-003',
+            'B1-004',
+            'B2-006',
+            'B3-005',
+            'B3-006',
+        ]
     ];
     private Client $client;
 
@@ -158,7 +180,7 @@ class KronoxService
                 'typ' => 'RESURSER_LOKALER',
                 'intervall' => $booking->interval,
                 'moment' => $booking->message ?? ' ',
-                'flik' => 'FLIK_0001',
+                'flik' => $booking->flik,
             ],
             'cookies' => $cookieJar,
         ])->getBody()->getContents();
@@ -185,9 +207,11 @@ class KronoxService
         ])->getBody()->getContents();
     }
 
-    public function bookings(string $JSESSIONID)
+    public function bookings(string $JSESSIONID, ?string $flik = 'FLIK_0001')
     {
-        $url = '/minaresursbokningar.jsp?flik=FLIK_0001';
+        if (!$flik) $flik = 'FLIK_0001';
+
+        $url = "/minaresursbokningar.jsp?flik={$flik}";
         $url = $url.'&datum='.substr(now(), 2, 8);
 
         $cookieJar = CookieJar::fromArray([
@@ -257,13 +281,15 @@ class KronoxService
         return collect($this->intervals)->firstWhere('time', $time)['interval'];
     }
 
-    public function all(string $JSESSIONID, Carbon $date = null)
+    public function all(string $JSESSIONID, Carbon $date = null, ?string $flik = 'FLIK_0001')
     {
+        if (!$flik) $flik = 'FLIK_0001';
+
         if (! $date) {
             $date = now();
         }
 
-        $url = "/ajax/ajax_resursbokning.jsp?op=hamtaBokningar&flik=FLIK_0001&datum={$date->format('y-m-d')}";
+        $url = "/ajax/ajax_resursbokning.jsp?op=hamtaBokningar&flik={$flik}&datum={$date->format('y-m-d')}";
 
         $cookieJar = CookieJar::fromArray([
             'JSESSIONID' => $JSESSIONID,
@@ -286,11 +312,11 @@ class KronoxService
 
             foreach ($tableRow->getElementsByTagName('td') as $cell) {
                 if ($cell->getAttribute('class') == 'grupprum-kolumn') {
-                    $text = self::DOMinnerHTML($cell->getElementsByTagName('b')->item(0));
-                    $tooltip = self::DOMinnerHTML($cell->getElementsByTagName('small')->item(0));
+                    $text = $this->DOMinnerHTML($cell->getElementsByTagName('b')->item(0));
+                    $tooltip = $this->DOMinnerHTML($cell->getElementsByTagName('small')->item(0));
                     $row[] = ['text' => $text, 'tooltip' => $tooltip];
                 } elseif (strpos($cell->getAttribute('class'), 'grupprum-upptagen') !== false) {
-                    $text = trim(html_entity_decode(self::DOMinnerHTML($cell->getElementsByTagName('center')->item(0))), " \t\n\r\0\x0B\xC2\xA0");
+                    $text = trim(html_entity_decode($this->DOMinnerHTML($cell->getElementsByTagName('center')->item(0))), " \t\n\r\0\x0B\xC2\xA0");
                     //$text = substr($item, 0, -3); //Don't ask, magic!
                     $tooltip = $cell->getAttribute('title');
                     $row[] = ['text' => $text, 'tooltip' => $tooltip];
@@ -308,14 +334,14 @@ class KronoxService
         return $rows;
     }
 
-    public function isRoomValid(string $room)
+    public function isRoomValid(string $room, string $flik = 'FLIK_0001')
     {
-        return in_array(strtoupper($room), $this->rooms);
+        return in_array(strtoupper($room), $this->rooms[$flik]);
     }
 
-    public function getRooms()
+    public function getRooms(string $flik = 'FLIK_0001')
     {
-        return $this->rooms;
+        return $this->rooms[$flik];
     }
 
     public function getIntervals()
