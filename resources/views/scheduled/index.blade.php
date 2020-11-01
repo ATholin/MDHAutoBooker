@@ -56,7 +56,7 @@
     
                         <label class="block mt-4">
                             <span class="text-gray-700">Campus</span>
-                            <select class="form-select bg-gray-200 mt-1 block w-full" id="flik" name="flik" disabled>
+                            <select class="form-select bg-gray-200 mt-1 block w-full" id="flik" name="flik" readonly>
                                 <option value="FLIK_0001" {{ request('flik') == 'FLIK_0001' ? "selected" : ""  }}>Västerås</option>
                                 <option value="FLIK_0010" {{ request('flik') == 'FLIK_0010' ? "selected" : ""  }}>Eskilstuna</option>
                             </select>
