@@ -104,7 +104,7 @@ class KronoxService
             'B2-006',
             'B3-005',
             'B3-006',
-        ]
+        ],
     ];
     private Client $client;
 
@@ -209,7 +209,9 @@ class KronoxService
 
     public function bookings(string $JSESSIONID, ?string $flik = 'FLIK_0001')
     {
-        if (!$flik) $flik = 'FLIK_0001';
+        if (! $flik) {
+            $flik = 'FLIK_0001';
+        }
 
         $url = "/minaresursbokningar.jsp?flik={$flik}";
         $url = $url.'&datum='.substr(now(), 2, 8);
@@ -283,7 +285,9 @@ class KronoxService
 
     public function all(string $JSESSIONID, Carbon $date = null, ?string $flik = 'FLIK_0001')
     {
-        if (!$flik) $flik = 'FLIK_0001';
+        if (! $flik) {
+            $flik = 'FLIK_0001';
+        }
 
         if (! $date) {
             $date = now();
